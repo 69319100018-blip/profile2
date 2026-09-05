@@ -1,0 +1,1350 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>白甜甜 · Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="theme-mikasa.css" />
+  <link rel="stylesheet" href="theme-scarlet.css" />
+  <link rel="stylesheet" href="theme-esdeath.css" />
+  <link rel="stylesheet" href="theme-secret.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+</head>
+<body class="locked">
+  <!-- Enter gate -->
+  <div class="enter-gate" id="enterGate" role="button" tabindex="0" aria-label="คลิกเพื่อเข้าสู่โปรไฟล์">
+    <div class="enter-inner">
+      <div class="enter-avatar">
+        <img src="photo.png" alt="" />
+      </div>
+      <h2 class="enter-name">MONEY</h2>
+      <p class="enter-hint">
+        <span class="enter-pulse"></span>
+        click to enter
+      </p>
+    </div>
+  </div>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Soft custom cursor + trail -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+
+  <!-- Video Background (dual layer for crossfade) -->
+  <div class="video-bg" aria-hidden="true">
+    <video id="bgVideo" class="bg-layer is-active" autoplay muted loop playsinline poster="photo.png">
+      <source src="" type="video/mp4" />
+    </video>
+    <video id="bgVideoB" class="bg-layer" muted loop playsinline poster="photo.png">
+      <source src="" type="video/mp4" />
+    </video>
+  </div>
+  <div class="video-overlay" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Share Card Modal -->
+  <div class="share-modal" id="shareModal" role="dialog" aria-modal="true" aria-label="Share card" hidden>
+    <div class="share-modal-backdrop" id="shareModalBackdrop"></div>
+    <div class="share-modal-panel">
+      <button type="button" class="share-modal-close" id="shareModalClose" aria-label="ปิด">&times;</button>
+      <h3 class="share-modal-title">Share Card</h3>
+      <p class="share-modal-sub">preview · download · copy</p>
+      <div class="share-card-preview">
+        <canvas id="shareCanvas" width="720" height="900" aria-label="Share preview"></canvas>
+      </div>
+      <div class="share-modal-actions">
+        <button type="button" class="share-action primary" id="shareDownload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button type="button" class="share-action" id="shareCopyImg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy image
+        </button>
+        <button type="button" class="share-action" id="shareCopyLink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy link
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HERO / PROFILE ========== -->
+  <section class="hero">
+    <article class="profile" aria-label="Profile card">
+      <div class="bio-sparkles" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="banner">
+        <video id="bannerVideo" autoplay muted loop playsinline>
+          <source src="" type="video/mp4" />
+        </video>
+        <div class="views-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          soft
+        </div>
+      </div>
+
+      <div class="profile-body">
+        <div class="avatar-row">
+          <div class="avatar">
+            <img src="photo.png" alt="prasitchok" />
+          </div>
+          <div class="name-block">
+            <h1 class="name-scatter" id="nameScatter" aria-label="talos blackagency">白甜甜</h1>
+            <p class="status-pill" id="statusPill">
+              <span class="status-dot"></span>
+              <span id="statusText">online · quiet</span>
+            </p>
+            <p class="greeting" id="greeting" aria-live="polite"></p>
+            <p class="tagline" id="tagline"><span class="typed"></span><span class="caret">|</span></p>
+          </div>
+        </div>
+
+        <p class="bio">
+          Living alone is perfectly fine.<br />
+          
+        </p>
+
+        <nav class="socials" aria-label="Social links">
+          <a href="https://www.instagram.com/baitoey5yy_?stkn=cW82aXM0bGxlb203" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-toast="เปิด Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1.15"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/bandittha.buntham" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-toast="เปิด Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1z"/>
+            </svg>
+          </a>
+          <button class="share-btn" id="shareBtn" aria-label="Share card" title="Share card" data-toast="Share card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
+            </svg>
+          </button>
+        </nav>
+
+        <!-- Music player -->
+        <div class="player" role="region" aria-label="Music player">
+          <div class="player-cover" id="playerCover">
+            <img src="photo.png" alt="" />
+          </div>
+          <div class="player-info">
+            <div class="player-meta">
+              <div class="player-title" id="playerTitle">Insomnia</div>
+              <div class="player-artist" id="playerArtist">slowed + reverb</div>
+            </div>
+            <div class="progress-wrap">
+              <span class="time" id="currentTime">0:00</span>
+              <div class="progress" id="progress" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+              <span class="time end" id="duration">2:42</span>
+            </div>
+            <!-- Simple visualizer -->
+            <div class="viz" id="viz" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <!-- Lyrics snippet -->
+            <p class="lyrics-snippet" id="lyricsSnippet" aria-live="polite"></p>
+          </div>
+          <div class="player-controls">
+            <div class="vol-wrap">
+              <button class="ctrl-btn vol-btn" id="muteBtn" aria-label="Mute / Unmute" title="ปิดเสียง">
+                <svg id="volIcon" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zm7.07 1.93a9 9 0 0 1 0 10.14M15.54 8.46a5 5 0 0 1 0 7.08"/></svg>
+              </button>
+              <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.02" value="0.7" aria-label="Volume" />
+            </div>
+            <button class="ctrl-btn play-btn" id="playBtn" aria-label="Play / Pause" title="เล่น / หยุด (Space)">
+              <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2026 talos blackagency · soft nights only</p>
+  </footer>
+
+  <audio id="audio" preload="metadata" loop>
+    <source src="Insomnia slowed reverb.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    /* ========== Random video pair (bg + banner) + theme/song — anime edition ========== */
+    (function () {
+      const clips = ['mikasa-h.mp4', 'scarletvandimion.mp4', 'esdeath.mp4'];
+      const pick = clips[Math.floor(Math.random() * clips.length)];
+      window.__bgClip = pick;
+      document.querySelectorAll('.enter-avatar img, .avatar img, .player-cover img').forEach((img) => {
+        img.src = 'photo.png';
+      });
+
+      const bg = document.getElementById('bgVideo');
+      const banner = document.getElementById('bannerVideo');
+      if (bg) {
+        const src = bg.querySelector('source');
+        if (src) src.src = pick;
+        bg.load();
+      }
+      if (banner) {
+        const src = banner.querySelector('source');
+        if (src) src.src = pick;
+        banner.load();
+      }
+
+      window.__audioStartAt = 0;
+      const audio = document.getElementById('audio');
+      const srcEl = audio && audio.querySelector('source');
+      const title = document.getElementById('playerTitle');
+      const artist = document.getElementById('playerArtist');
+
+      if (pick === 'mikasa-h.mp4') {
+        document.body.classList.add('theme-mikasa');
+        if (srcEl) { srcEl.src = 'Insomnia slowed reverb.mp3'; audio.load(); }
+        if (title) title.textContent = 'Insomnia';
+        if (artist) artist.textContent = 'slowed + reverb';
+      } else if (pick === 'scarletvandimion.mp4') {
+        document.body.classList.add('theme-scarlet');
+        window.__audioStartAt = 49;
+        if (srcEl) { srcEl.src = 'The Neighbourhood - Sweater Weather.mp3'; audio.load(); }
+        if (title) title.textContent = 'hate that i made you love me X One Of the Girls';
+        if (artist) artist.textContent = 'Ariana Grande, The Weeknd';
+        if (audio) {
+          const seekStart = () => {
+            if (audio.currentTime < window.__audioStartAt) audio.currentTime = window.__audioStartAt;
+          };
+          audio.addEventListener('loadedmetadata', seekStart);
+          audio.addEventListener('canplay', seekStart);
+        }
+      } else if (pick === 'esdeath.mp4') {
+        document.body.classList.add('theme-esdeath');
+        if (srcEl) { srcEl.src = 'Halsey-Gasoline(instrumental).mp3'; audio.load(); }
+        if (title) title.textContent = 'Gasoline';
+        if (artist) artist.textContent = 'Halsey · instrumental';
+      }
+    })();
+
+    /* ========== Hidden background shortcuts + crossfade — anime edition ========== */
+    (function () {
+      const clips = {
+        Numpad1: 'mikasa-h.mp4',
+        Numpad2: 'scarletvandimion.mp4',
+        Numpad3: 'esdeath.mp4'
+      };
+      const themeClasses = ['theme-mikasa', 'theme-scarlet', 'theme-esdeath', 'theme-secret'];
+      const isEditableTarget = (target) => target instanceof Element && target.matches('input, textarea, [contenteditable="true"]');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let switching = false;
+
+      function fadeVolume(audio, to, ms) {
+        return new Promise((resolve) => {
+          if (!audio || reduceMotion || ms <= 0) {
+            if (audio) audio.volume = to;
+            resolve();
+            return;
+          }
+          const from = audio.volume;
+          const start = performance.now();
+          function tick(now) {
+            const t = Math.min(1, (now - start) / ms);
+            const eased = t * (2 - t);
+            audio.volume = from + (to - from) * eased;
+            if (t < 1) requestAnimationFrame(tick);
+            else resolve();
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+
+      function applyThemeClasses(clip) {
+        document.body.classList.remove(...themeClasses);
+        if (clip === 'mikasa-h.mp4') document.body.classList.add('theme-mikasa');
+        if (clip === 'scarletvandimion.mp4') document.body.classList.add('theme-scarlet');
+        if (clip === 'esdeath.mp4') document.body.classList.add('theme-esdeath');
+      }
+
+      function applyMeta(clip) {
+        const title = document.getElementById('playerTitle');
+        const artist = document.getElementById('playerArtist');
+        const duration = document.getElementById('duration');
+        if (clip === 'scarletvandimion.mp4') {
+          if (title) title.textContent = 'hate that i made you love me X One Of the Girls';
+          if (artist) artist.textContent = 'Ariana Grande, The Weeknd';
+          if (duration) duration.textContent = '0:50';
+        } else if (clip === 'esdeath.mp4') {
+          if (title) title.textContent = 'Gasoline';
+          if (artist) artist.textContent = 'Halsey · instrumental';
+          if (duration) duration.textContent = '0:00';
+        } else {
+          if (title) title.textContent = 'Insomnia';
+          if (artist) artist.textContent = 'slowed + reverb';
+          if (duration) duration.textContent = '0:00';
+        }
+      }
+
+      function getActiveBg() {
+        return document.querySelector('.video-bg .bg-layer.is-active') || document.getElementById('bgVideo');
+      }
+
+      function getInactiveBg() {
+        return document.querySelector('.video-bg .bg-layer:not(.is-active)') || document.getElementById('bgVideoB');
+      }
+
+      async function switchBackground(clip) {
+        if (switching) return;
+        if (window.__bgClip === clip) return;
+        switching = true;
+        document.body.classList.add('is-theme-fading');
+
+        const incoming = getInactiveBg();
+        const outgoing = getActiveBg();
+        const banner = document.getElementById('bannerVideo');
+        const audio = document.getElementById('audio');
+        const wasPlaying = audio && !audio.paused;
+        const isScarlet = clip === 'scarletvandimion.mp4';
+        const isEsdeath = clip === 'esdeath.mp4';
+        const targetVol = audio ? (typeof audio.dataset.userVol !== 'undefined'
+          ? parseFloat(audio.dataset.userVol)
+          : (audio.volume || 0.7)) : 0.7;
+
+        window.__bgClip = clip;
+        window.__audioStartAt = isScarlet ? 49 : 0;
+
+        if (incoming) {
+          const src = incoming.querySelector('source');
+          if (src) src.src = clip;
+          incoming.load();
+          try { await incoming.play(); } catch { /* autoplay policy */ }
+        }
+
+        const fadeMs = reduceMotion ? 0 : 700;
+        if (audio && wasPlaying) fadeVolume(audio, 0, fadeMs * 0.65);
+
+        await new Promise((r) => setTimeout(r, reduceMotion ? 0 : 120));
+
+        if (incoming) incoming.classList.add('is-active');
+        if (outgoing) outgoing.classList.remove('is-active');
+
+        applyThemeClasses(clip);
+        applyMeta(clip);
+
+        if (banner) {
+          if (!reduceMotion) banner.style.opacity = '0';
+          const bsrc = banner.querySelector('source');
+          if (bsrc) bsrc.src = clip;
+          banner.load();
+          banner.play().catch(() => {});
+          setTimeout(() => {
+            if (!reduceMotion) banner.style.opacity = '1';
+          }, reduceMotion ? 0 : 280);
+        }
+
+        document.querySelectorAll('.enter-avatar img, .avatar img, .player-cover img').forEach((img) => {
+          img.src = 'photo.png';
+        });
+
+        await new Promise((r) => setTimeout(r, fadeMs));
+
+        if (outgoing) {
+          try { outgoing.pause(); } catch { /* */ }
+        }
+
+        if (audio) {
+          const source = audio.querySelector('source');
+          if (source) {
+            source.src = isScarlet
+              ? 'The Neighbourhood - Sweater Weather.mp3'
+              : (isEsdeath ? 'Halsey-Gasoline(instrumental).mp3' : 'Insomnia slowed reverb.mp3');
+          }
+          audio.load();
+          const startPlay = () => {
+            if (window.__audioStartAt) audio.currentTime = window.__audioStartAt;
+            audio.volume = 0;
+            if (wasPlaying) {
+              audio.play().catch(() => {});
+              fadeVolume(audio, targetVol, reduceMotion ? 0 : 550);
+            } else {
+              audio.volume = targetVol;
+            }
+          };
+          if (audio.readyState >= 2) startPlay();
+          else audio.addEventListener('canplay', startPlay, { once: true });
+        }
+
+        document.body.classList.remove('is-theme-fading');
+        switching = false;
+        if (typeof showToast === 'function') {
+          const label = isScarlet ? 'theme · scarlet' : (isEsdeath ? 'theme · esdeath' : 'theme · mikasa');
+          showToast(label);
+        }
+      }
+
+      window.__switchBackground = switchBackground;
+
+      window.addEventListener('keydown', (event) => {
+        if (event.code === 'Numpad5' && !isEditableTarget(event.target)) {
+          event.preventDefault();
+          const isSecret = document.body.classList.toggle('theme-secret');
+          if (typeof showToast === 'function') {
+            showToast(isSecret ? 'secret bio · on' : 'secret bio · off');
+          }
+          return;
+        }
+        const clip = clips[event.code];
+        if (!clip || isEditableTarget(event.target)) return;
+        event.preventDefault();
+        switchBackground(clip);
+      });
+    })();
+
+    /* ========== Enter gate ========== */
+    const enterGate = document.getElementById('enterGate');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = matchMedia('(hover: none), (pointer: coarse)').matches;
+
+    function enterSite() {
+      if (!document.body.classList.contains('locked')) return;
+      document.body.classList.remove('locked');
+      document.body.classList.add('entered');
+      enterGate.classList.add('fade-out');
+      setTimeout(() => {
+        enterGate.style.display = 'none';
+      }, reduceMotion ? 0 : 700);
+
+      // เริ่มเพลงทันทีเมื่อกด enter
+      const bgAudio = document.getElementById('audio');
+      if (bgAudio) {
+        const startAt = window.__audioStartAt || 0;
+        if (startAt > 0) bgAudio.currentTime = startAt;
+        bgAudio.play().catch(() => {});
+      }
+    }
+
+    if (enterGate) {
+      enterGate.addEventListener('click', enterSite);
+      enterGate.addEventListener('keydown', (e) => {
+        if (e.code === 'Enter' || e.code === 'Space') {
+          e.preventDefault();
+          enterSite();
+        }
+      });
+    }
+
+    /* ========== Soft custom cursor + trail ========== */
+    const cursor = document.getElementById('cursor');
+    const cursorGlow = document.getElementById('cursorGlow');
+    const cursorTrail = document.getElementById('cursorTrail');
+
+    if (!isTouch && !reduceMotion) {
+      document.body.classList.add('has-custom-cursor');
+      let cx = 0, cy = 0, gx = 0, gy = 0;
+      const trailDots = [];
+      const TRAIL_COUNT = 10;
+
+      for (let i = 0; i < TRAIL_COUNT; i++) {
+        const d = document.createElement('span');
+        d.className = 'trail-dot';
+        d.style.opacity = String(0.35 * (1 - i / TRAIL_COUNT));
+        d.style.width = d.style.height = (5 - i * 0.28) + 'px';
+        cursorTrail.appendChild(d);
+        trailDots.push({ el: d, x: 0, y: 0 });
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        cx = e.clientX;
+        cy = e.clientY;
+        cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      }, { passive: true });
+
+      function glowLoop() {
+        gx += (cx - gx) * 0.12;
+        gy += (cy - gy) * 0.12;
+        cursorGlow.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
+
+        let px = cx, py = cy;
+        for (let i = 0; i < trailDots.length; i++) {
+          const d = trailDots[i];
+          d.x += (px - d.x) * (0.28 - i * 0.018);
+          d.y += (py - d.y) * (0.28 - i * 0.018);
+          d.el.style.transform = `translate3d(${d.x}px, ${d.y}px, 0)`;
+          px = d.x;
+          py = d.y;
+        }
+        requestAnimationFrame(glowLoop);
+      }
+      glowLoop();
+
+      document.querySelectorAll('a, button, .slide, .slider-btn, .progress, .ctrl-btn, .vol-slider, .share-btn, .cf-cover').forEach((el) => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+      });
+    }
+
+    /* ========== Time-of-day greeting ========== */
+    (function () {
+      const el = document.getElementById('greeting');
+      if (!el) return;
+      function pad(n) { return String(n).padStart(2, '0'); }
+      function updateGreeting() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        let phrase = 'good evening';
+        if (h >= 5 && h < 12) phrase = 'good morning';
+        else if (h >= 12 && h < 17) phrase = 'good afternoon';
+        else if (h >= 17 && h < 21) phrase = 'good evening';
+        else phrase = 'good night';
+        el.textContent = phrase + ' · ' + pad(h) + ':' + pad(m);
+      }
+      updateGreeting();
+      setInterval(updateGreeting, 30000);
+    })();
+
+    /* ========== Toast ========== */
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
+
+    document.querySelectorAll('.socials a').forEach((a) => {
+      a.addEventListener('click', () => {
+        const msg = a.getAttribute('data-toast') || 'เปิดลิงก์';
+        showToast(msg);
+      });
+    });
+
+    /* ========== Share Card (canvas preview) ========== */
+    (function () {
+      const shareBtn = document.getElementById('shareBtn');
+      const modal = document.getElementById('shareModal');
+      const canvas = document.getElementById('shareCanvas');
+      const closeBtn = document.getElementById('shareModalClose');
+      const backdrop = document.getElementById('shareModalBackdrop');
+      const downloadBtn = document.getElementById('shareDownload');
+      const copyImgBtn = document.getElementById('shareCopyImg');
+      const copyLinkBtn = document.getElementById('shareCopyLink');
+      if (!shareBtn || !modal || !canvas) return;
+
+      const W = 720;
+      const H = 900;
+      let lastBlob = null;
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          // same-origin: skip crossOrigin to avoid CORS taint on canvas
+          try {
+            const u = new URL(src, window.location.href);
+            if (u.origin !== window.location.origin) img.crossOrigin = 'anonymous';
+          } catch { /* relative path ok */ }
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = src;
+        });
+      }
+
+      async function getAvatarImage() {
+        // prefer already-loaded DOM image (avoids reload / CORS issues)
+        const el = document.querySelector('.avatar img')
+          || document.querySelector('.player-cover img')
+          || document.querySelector('.enter-avatar img');
+        if (el && el.complete && el.naturalWidth > 0) {
+          return el;
+        }
+        const src = (el && el.src) || 'photo.png';
+        return loadImage(src);
+      }
+
+      function roundRect(ctx, x, y, w, h, r) {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + w, y, x + w, y + h, radius);
+        ctx.arcTo(x + w, y + h, x, y + h, radius);
+        ctx.arcTo(x, y + h, x, y, radius);
+        ctx.arcTo(x, y, x + w, y, radius);
+        ctx.closePath();
+      }
+
+      function drawCover(ctx, img, x, y, size) {
+        const iw = img.naturalWidth || img.width;
+        const ih = img.naturalHeight || img.height;
+        if (!iw || !ih) return;
+        const s = Math.min(iw, ih);
+        const sx = (iw - s) / 2;
+        const sy = (ih - s) / 2;
+        ctx.drawImage(img, sx, sy, s, s, x, y, size, size);
+      }
+
+      async function renderShareCard() {
+        const ctx = canvas.getContext('2d');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const name = (document.getElementById('nameScatter')?.getAttribute('aria-label')
+          || document.querySelector('.name-scatter')?.textContent
+          || 'talos blackagency').trim();
+        const songTitle = document.getElementById('playerTitle')?.textContent?.trim() || 'Insomnia';
+        const songArtist = document.getElementById('playerArtist')?.textContent?.trim() || 'slowed + reverb';
+        const statusText = document.getElementById('statusText')?.textContent?.trim() || 'online · quiet';
+        const urlHost = (() => {
+          try { return new URL(window.location.href).host || 'profile'; }
+          catch { return 'profile'; }
+        })();
+
+        let avatarImg = null;
+        try { avatarImg = await getAvatarImage(); } catch { avatarImg = null; }
+
+        // soft dark gradient background
+        const bg = ctx.createLinearGradient(0, 0, W, H);
+        bg.addColorStop(0, '#0c0c0e');
+        bg.addColorStop(0.45, '#121214');
+        bg.addColorStop(1, '#0a0a0b');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        // subtle radial glow
+        const glow = ctx.createRadialGradient(W * 0.5, H * 0.28, 20, W * 0.5, H * 0.28, 320);
+        glow.addColorStop(0, 'rgba(255,255,255,0.08)');
+        glow.addColorStop(0.55, 'rgba(255,255,255,0.02)');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, W, H);
+
+        // noise-like soft vignette
+        const vig = ctx.createRadialGradient(W / 2, H / 2, H * 0.2, W / 2, H / 2, H * 0.75);
+        vig.addColorStop(0, 'transparent');
+        vig.addColorStop(1, 'rgba(0,0,0,0.45)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, W, H);
+
+        // card panel
+        const pad = 48;
+        const cardX = pad;
+        const cardY = 72;
+        const cardW = W - pad * 2;
+        const cardH = H - 160;
+        ctx.save();
+        roundRect(ctx, cardX, cardY, cardW, cardH, 28);
+        ctx.fillStyle = 'rgba(22,22,24,0.72)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+
+        // avatar
+        const avSize = 168;
+        const avX = (W - avSize) / 2;
+        const avY = cardY + 56;
+        if (avatarImg) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(avX + avSize / 2, avY + avSize / 2, avSize / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          drawCover(ctx, avatarImg, avX, avY, avSize);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = 'rgba(255,255,255,0.12)';
+          ctx.beginPath();
+          ctx.arc(avX + avSize / 2, avY + avSize / 2, avSize / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // avatar ring
+        ctx.beginPath();
+        ctx.arc(avX + avSize / 2, avY + avSize / 2, avSize / 2 + 3, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(avX + avSize / 2, avY + avSize / 2, avSize / 2 + 10, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // name
+        ctx.fillStyle = '#f5f5f3';
+        ctx.font = '700 36px Manrope, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(name, W / 2, avY + avSize + 52);
+
+        // status pill
+        const statusY = avY + avSize + 96;
+        ctx.font = '500 16px Manrope, system-ui, sans-serif';
+        const statusW = Math.min(ctx.measureText(statusText).width + 44, cardW - 80);
+        const statusX = (W - statusW) / 2;
+        roundRect(ctx, statusX, statusY - 16, statusW, 32, 16);
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fill();
+        ctx.fillStyle = 'rgba(109,206,138,0.95)';
+        ctx.beginPath();
+        ctx.arc(statusX + 18, statusY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(245,245,243,0.78)';
+        ctx.fillText(statusText, W / 2 + 6, statusY);
+
+        // now playing block
+        const npY = statusY + 56;
+        const npH = 110;
+        const npX = cardX + 36;
+        const npW = cardW - 72;
+        roundRect(ctx, npX, npY, npW, npH, 18);
+        ctx.fillStyle = 'rgba(0,0,0,0.35)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // mini cover
+        const mini = 64;
+        const miniX = npX + 20;
+        const miniY = npY + (npH - mini) / 2;
+        if (avatarImg) {
+          ctx.save();
+          roundRect(ctx, miniX, miniY, mini, mini, 12);
+          ctx.clip();
+          drawCover(ctx, avatarImg, miniX, miniY, mini);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = 'rgba(255,255,255,0.1)';
+          roundRect(ctx, miniX, miniY, mini, mini, 12);
+          ctx.fill();
+        }
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, miniX, miniY, mini, mini, 12);
+        ctx.stroke();
+
+        // song text
+        ctx.textAlign = 'left';
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.font = '500 12px DM Mono, monospace';
+        ctx.fillText('NOW PLAYING', miniX + mini + 18, npY + 34);
+        ctx.fillStyle = '#f5f5f3';
+        ctx.font = '600 22px Manrope, system-ui, sans-serif';
+        const titleMax = npW - mini - 50;
+        let title = songTitle;
+        if (ctx.measureText(title).width > titleMax) {
+          while (title.length > 3 && ctx.measureText(title + '…').width > titleMax) title = title.slice(0, -1);
+          title += '…';
+        }
+        ctx.fillText(title, miniX + mini + 18, npY + 60);
+        ctx.fillStyle = 'rgba(245,245,243,0.55)';
+        ctx.font = '500 15px Manrope, system-ui, sans-serif';
+        ctx.fillText(songArtist, miniX + mini + 18, npY + 84);
+
+        // footer
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(255,255,255,0.28)';
+        ctx.font = '500 13px DM Mono, monospace';
+        ctx.fillText(urlHost + '  ·  soft nights only', W / 2, cardY + cardH + 36);
+
+        // export blob for copy/download
+        return new Promise((resolve) => {
+          canvas.toBlob((blob) => {
+            lastBlob = blob;
+            resolve(blob);
+          }, 'image/png');
+        });
+      }
+
+      function openModal() {
+        modal.hidden = false;
+        document.body.classList.add('share-open');
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(() => modal.classList.add('open'));
+        renderShareCard().catch(() => showToast('สร้างการ์ดไม่สำเร็จ'));
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.classList.remove('share-open');
+        document.body.style.overflow = '';
+        setTimeout(() => { modal.hidden = true; }, 350);
+      }
+
+      shareBtn.addEventListener('click', openModal);
+      closeBtn?.addEventListener('click', closeModal);
+      backdrop?.addEventListener('click', closeModal);
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      downloadBtn?.addEventListener('click', async () => {
+        try {
+          if (!lastBlob) await renderShareCard();
+          if (!lastBlob) throw new Error('no blob');
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(lastBlob);
+          a.download = 'talos-share-card.png';
+          a.click();
+          URL.revokeObjectURL(a.href);
+          showToast('ดาวน์โหลดแล้ว ✓');
+        } catch {
+          showToast('ดาวน์โหลดไม่สำเร็จ');
+        }
+      });
+
+      copyImgBtn?.addEventListener('click', async () => {
+        try {
+          if (!lastBlob) await renderShareCard();
+          if (!lastBlob) throw new Error('no blob');
+          if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': lastBlob })
+            ]);
+            showToast('คัดลอกรูปแล้ว ✓');
+          } else {
+            throw new Error('clipboard image unsupported');
+          }
+        } catch {
+          showToast('คัดลอกรูปไม่สำเร็จ · ลอง Download');
+        }
+      });
+
+      copyLinkBtn?.addEventListener('click', async () => {
+        const url = window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          showToast('คัดลอกลิงก์แล้ว ✓');
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+            showToast('คัดลอกลิงก์แล้ว ✓');
+          } catch {
+            showToast('คัดลอกไม่สำเร็จ');
+          }
+          document.body.removeChild(ta);
+        }
+      });
+    })();
+
+    /* ========== Typing effect (tagline) ========== */
+    const typedEl = document.querySelector('.typed');
+    const caretEl = document.querySelector('.caret');
+    const phrases = ['your eye not glowing ','not like the day we met','slow songs · blurry lights'];
+    let phraseIdx = 0, charIdx = 0, deleting = false;
+
+    function typeLoop() {
+      if (!typedEl) return;
+      const current = phrases[phraseIdx];
+      if (!deleting) {
+        typedEl.textContent = current.slice(0, charIdx + 1);
+        charIdx++;
+        if (charIdx === current.length) {
+          deleting = true;
+          setTimeout(typeLoop, 1800);
+          return;
+        }
+        setTimeout(typeLoop, 70 + Math.random() * 40);
+      } else {
+        typedEl.textContent = current.slice(0, charIdx - 1);
+        charIdx--;
+        if (charIdx === 0) {
+          deleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          setTimeout(typeLoop, 400);
+          return;
+        }
+        setTimeout(typeLoop, 35);
+      }
+    }
+    if (!reduceMotion) setTimeout(typeLoop, 600);
+    else if (typedEl) typedEl.textContent = phrases[0];
+
+    /* ========== Name scatter — spring physics ========== */
+    (function () {
+      const nameEl = document.getElementById('nameScatter');
+      if (!nameEl || reduceMotion || isTouch) return;
+
+      const text = nameEl.textContent.trim();
+      nameEl.textContent = '';
+      const letters = [];
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const span = document.createElement('span');
+        span.className = 'letter' + (ch === ' ' ? ' space' : '');
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        nameEl.appendChild(span);
+        letters.push({ el: span, x: 0, y: 0, vx: 0, vy: 0 });
+      }
+
+      const RADIUS = 120;
+      const STRENGTH = 2.8;
+      const STIFFNESS = 0.08;
+      const DAMPING = 0.78;
+      const MAX_FORCE = 48;
+
+      let mouseX = -9999, mouseY = -9999;
+      let raf = null;
+
+      function onMove(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!raf) raf = requestAnimationFrame(tick);
+      }
+
+      function onLeave() {
+        mouseX = -9999;
+        mouseY = -9999;
+        if (!raf) raf = requestAnimationFrame(tick);
+      }
+
+      function tick() {
+        let stillMoving = false;
+        for (let i = 0; i < letters.length; i++) {
+          const L = letters[i];
+          if (L.el.classList.contains('space')) continue;
+
+          const rect = L.el.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2 - L.x;
+          const cy = rect.top + rect.height / 2 - L.y;
+          const dx = cx + L.x - mouseX;
+          const dy = cy + L.y - mouseY;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
+
+          let fx = 0, fy = 0;
+          if (dist < RADIUS) {
+            const t = 1 - dist / RADIUS;
+            const force = Math.min(MAX_FORCE, STRENGTH * t * t * 40);
+            fx = (dx / dist) * force;
+            fy = (dy / dist) * force;
+            L.el.classList.add('is-active');
+          } else {
+            L.el.classList.remove('is-active');
+          }
+
+          fx += -L.x * STIFFNESS;
+          fy += -L.y * STIFFNESS;
+
+          L.vx = (L.vx + fx) * DAMPING;
+          L.vy = (L.vy + fy) * DAMPING;
+          L.x += L.vx;
+          L.y += L.vy;
+
+          if (Math.abs(L.vx) < 0.02 && Math.abs(L.vy) < 0.02 &&
+              Math.abs(L.x) < 0.15 && Math.abs(L.y) < 0.15) {
+            L.vx = L.vy = 0;
+            L.x = L.y = 0;
+          } else {
+            stillMoving = true;
+          }
+
+          L.el.style.transform = `translate3d(${L.x.toFixed(2)}px, ${L.y.toFixed(2)}px, 0)`;
+        }
+
+        if (stillMoving) raf = requestAnimationFrame(tick);
+        else raf = null;
+      }
+
+      window.addEventListener('mousemove', onMove, { passive: true });
+      nameEl.addEventListener('mouseleave', onLeave);
+    })();
+
+    /* ========== Music player ========== */
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const playIcon = document.getElementById('playIcon');
+    const muteBtn = document.getElementById('muteBtn');
+    const volIcon = document.getElementById('volIcon');
+    const volSlider = document.getElementById('volSlider');
+    const progress = document.getElementById('progress');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const playerCover = document.getElementById('playerCover');
+    const viz = document.getElementById('viz');
+    const lyricsSnippet = document.getElementById('lyricsSnippet');
+    const statusText = document.getElementById('statusText');
+    const statusPill = document.getElementById('statusPill');
+
+    const playSvg = '<path d="M8 5v14l11-7z"/>';
+    const pauseSvg = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
+    const volOnSvg = '<path d="M11 5L6 9H2v6h4l5 4V5zm7.07 1.93a9 9 0 0 1 0 10.14M15.54 8.46a5 5 0 0 1 0 7.08"/>';
+    const volOffSvg = '<path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/>';
+    const volLowSvg = '<path d="M11 5L6 9H2v6h4l5 4V5zm5.54 3.46a5 5 0 0 1 0 7.08"/>';
+
+    // Time-synced lyrics (instrumental / no clear vocals)
+    const lyricsTimeline = [
+      { t: 0, text: '' }
+    ];
+    let lastLyricText = null;
+
+    function updateLyrics() {
+      if (!lyricsSnippet || audio.paused) return;
+      const t = audio.currentTime;
+      let line = '';
+      for (let i = lyricsTimeline.length - 1; i >= 0; i--) {
+        if (t >= lyricsTimeline[i].t) {
+          line = lyricsTimeline[i].text;
+          break;
+        }
+      }
+      if (line !== lastLyricText) {
+        lastLyricText = line;
+        if (!line) {
+          lyricsSnippet.classList.remove('show');
+          setTimeout(() => { if (!lastLyricText) lyricsSnippet.textContent = ''; }, 280);
+        } else {
+          lyricsSnippet.classList.remove('show');
+          setTimeout(() => {
+            if (lastLyricText === line) {
+              lyricsSnippet.textContent = line;
+              lyricsSnippet.classList.add('show');
+            }
+          }, 160);
+        }
+      }
+    }
+
+    function stopLyrics() {
+      lastLyricText = null;
+      if (lyricsSnippet) {
+        lyricsSnippet.classList.remove('show');
+        setTimeout(() => { lyricsSnippet.textContent = ''; }, 280);
+      }
+    }
+
+    function formatTime(s) {
+      if (!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ':' + String(sec).padStart(2, '0');
+    }
+
+    function updateVolIcon(vol, muted) {
+      if (muted || vol === 0) {
+        volIcon.innerHTML = volOffSvg;
+      } else if (vol < 0.45) {
+        volIcon.innerHTML = volLowSvg;
+      } else {
+        volIcon.innerHTML = volOnSvg;
+      }
+    }
+
+    // Init volume
+    audio.volume = parseFloat(volSlider.value);
+    audio.dataset.userVol = String(audio.volume);
+    updateVolIcon(audio.volume, audio.muted);
+
+    function togglePlay() {
+      if (audio.paused) {
+        const startAt = window.__audioStartAt || 0;
+        // ถ้ายังอยู่ก่อนจุดเริ่ม (รวมตอน loop กลับมา) → กระโดดไปจุดเริ่ม
+        if (startAt > 0 && audio.currentTime < startAt) {
+          audio.currentTime = startAt;
+        }
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+    }
+
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+      const startAt = window.__audioStartAt || 0;
+      if (startAt > 0 && audio.currentTime < startAt) {
+        audio.currentTime = startAt;
+      }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (!audio.duration) return;
+      // หลัง loop กลับไปต้นไฟล์ → กระโดดไปจุดเริ่มธีม 222
+      const startAt = window.__audioStartAt || 0;
+      if (startAt > 0 && audio.currentTime < startAt - 0.15 && audio.currentTime < 1) {
+        audio.currentTime = startAt;
+      }
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = pct + '%';
+      progress.setAttribute('aria-valuenow', Math.round(pct));
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      updateLyrics();
+    });
+
+    playBtn.addEventListener('click', togglePlay);
+
+    muteBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      updateVolIcon(audio.volume, audio.muted);
+      muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute' : 'Mute');
+      showToast(audio.muted ? 'ปิดเสียง' : 'เปิดเสียง');
+    });
+
+    volSlider.addEventListener('input', () => {
+      const v = parseFloat(volSlider.value);
+      audio.volume = v;
+      audio.dataset.userVol = String(v);
+      if (v > 0 && audio.muted) {
+        audio.muted = false;
+      }
+      updateVolIcon(v, audio.muted);
+    });
+
+    /* Drag + click seek */
+    let seeking = false;
+    function seekFromEvent(e) {
+      const rect = progress.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      if (audio.duration) {
+        audio.currentTime = x * audio.duration;
+        progressBar.style.width = (x * 100) + '%';
+        lastLyricText = null;
+        updateLyrics();
+      }
+    }
+
+    progress.addEventListener('mousedown', (e) => {
+      seeking = true;
+      seekFromEvent(e);
+      e.preventDefault();
+    });
+    progress.addEventListener('touchstart', (e) => {
+      seeking = true;
+      seekFromEvent(e);
+    }, { passive: true });
+
+    window.addEventListener('mousemove', (e) => { if (seeking) seekFromEvent(e); });
+    window.addEventListener('touchmove', (e) => { if (seeking) seekFromEvent(e); }, { passive: true });
+    window.addEventListener('mouseup', () => { seeking = false; });
+    window.addEventListener('touchend', () => { seeking = false; });
+
+    progress.addEventListener('click', (e) => {
+      if (!seeking) seekFromEvent(e);
+    });
+
+    /* Spacebar play/pause */
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && !e.repeat) {
+        const tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+        e.preventDefault();
+        togglePlay();
+      }
+    });
+
+    audio.addEventListener('pause', () => {
+      playIcon.innerHTML = playSvg;
+      playerCover.classList.remove('spinning');
+      viz.classList.remove('active');
+      stopLyrics();
+      statusText.textContent = 'online · quiet';
+      statusPill.classList.remove('listening');
+    });
+    audio.addEventListener('play', () => {
+      playIcon.innerHTML = pauseSvg;
+      playerCover.classList.add('spinning');
+      viz.classList.add('active');
+      lastLyricText = null; // force refresh on resume/seek
+      updateLyrics();
+      statusText.textContent = 'online · listening';
+      statusPill.classList.add('listening');
+    });
+
+    /* ========== Scroll progress bar ========== */
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      scrollProgress.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    updateScrollProgress();
+
+    /* ========== Scroll reveal (one-shot) ========== */
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
+    reveals.forEach((el) => io.observe(el));
+
+    /* ========== Physics particles (soft mouse repulsion) ========== */
+    (function () {
+      const particlesEl = document.getElementById('particles');
+      if (!particlesEl || reduceMotion) return;
+
+      const COUNT = isTouch ? 10 : 22;
+      const particles = [];
+      const W = () => window.innerWidth;
+      const H = () => window.innerHeight;
+
+      for (let i = 0; i < COUNT; i++) {
+        const el = document.createElement('span');
+        el.className = 'particle physics';
+        const size = 1.6 + Math.random() * 2.8;
+        el.style.width = el.style.height = size + 'px';
+        el.style.opacity = 0.18 + Math.random() * 0.42;
+        particlesEl.appendChild(el);
+        particles.push({
+          el,
+          x: Math.random() * W(),
+          y: Math.random() * H(),
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: -0.15 - Math.random() * 0.35,
+          size
+        });
+      }
+
+      let mx = -9999, my = -9999;
+      const RADIUS = 140;
+      const REPEL = 1.8;
+
+      if (!isTouch) {
+        window.addEventListener('mousemove', (e) => {
+          mx = e.clientX;
+          my = e.clientY;
+        }, { passive: true });
+      }
+
+      function loop() {
+        const w = W(), h = H();
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const dx = p.x - mx;
+          const dy = p.y - my;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
+          if (dist < RADIUS) {
+            const t = 1 - dist / RADIUS;
+            const f = REPEL * t * t;
+            p.vx += (dx / dist) * f;
+            p.vy += (dy / dist) * f;
+          }
+          p.vy -= 0.004;
+          p.vx += (Math.random() - 0.5) * 0.02;
+          p.vx *= 0.97;
+          p.vy *= 0.97;
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -20) {
+            p.y = h + 10;
+            p.x = Math.random() * w;
+            p.vx = (Math.random() - 0.5) * 0.3;
+            p.vy = -0.2 - Math.random() * 0.3;
+          }
+          if (p.x < -20) p.x = w + 10;
+          if (p.x > w + 20) p.x = -10;
+          p.el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+    /* ========== Full-scene parallax ========== */
+    const profile = document.querySelector('.profile');
+    const bannerVid = document.querySelector('.banner video');
+    const bgVideo = document.querySelector('.video-bg video');
+    const avatar = document.querySelector('.avatar');
+    const profileBody = document.querySelector('.profile-body');
+
+    if (profile && !reduceMotion) {
+      let scrollY = 0;
+      let mouseX = 0, mouseY = 0;
+      let targetX = 0, targetY = 0;
+      let rafId = null;
+
+      function applyParallax() {
+        const sx = targetX, sy = targetY, sc = scrollY;
+        if (bgVideo) {
+          // mikasa landscape: keep upright, only gentle scale (no rotate/skew)
+          if (document.body.classList.contains('theme-mikasa')) {
+            bgVideo.style.transform = `translate3d(${sx * -12}px, ${sy * -8}px, 0) scale(1.06)`;
+          } else {
+            bgVideo.style.transform = `translate3d(${sx * -28}px, ${sy * -22 + sc * 0.15}px, 0) scale(1.14)`;
+          }
+        }
+        const rotY = sx * 8, rotX = sy * -6;
+        profile.style.transform =
+          `translate3d(${sx * 14}px, ${sy * 10 + sc * 0.28}px, 0) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        if (bannerVid) {
+          bannerVid.style.transform = `translate3d(${sx * -18}px, ${sy * -14 - sc * 0.06}px, 0) scale(1.12)`;
+        }
+        if (avatar) {
+          avatar.style.transform = `translate3d(${sx * 10}px, ${sy * 8}px, 20px)`;
+        }
+        if (profileBody) {
+          profileBody.style.transform = `translate3d(${sx * 4}px, ${sy * 3}px, 10px)`;
+        }
+        rafId = null;
+      }
+
+      function requestTick() {
+        if (rafId == null) rafId = requestAnimationFrame(applyParallax);
+      }
+
+      window.addEventListener('scroll', () => {
+        scrollY = window.scrollY;
+        requestTick();
+      }, { passive: true });
+
+      window.addEventListener('mousemove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        mouseX = Math.max(-1, Math.min(1, (e.clientX - cx) / (window.innerWidth / 2)));
+        mouseY = Math.max(-1, Math.min(1, (e.clientY - cy) / (window.innerHeight / 2)));
+        profile.classList.add('is-tilting');
+        requestTick();
+      }, { passive: true });
+
+      function lerpLoop() {
+        targetX += (mouseX - targetX) * 0.08;
+        targetY += (mouseY - targetY) * 0.08;
+        if (Math.abs(mouseX - targetX) > 0.001 || Math.abs(mouseY - targetY) > 0.001 || scrollY > 0) {
+          requestTick();
+        }
+        requestAnimationFrame(lerpLoop);
+      }
+      lerpLoop();
+    }
+    
+  </script>
+</body>
+</html>
